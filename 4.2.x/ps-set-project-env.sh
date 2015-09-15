@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 setProjectEnv() {
+	declare -a __CUSTOM_ENV
 
 	while [ "$1" ]; do
 		case "$1" in
@@ -20,6 +21,9 @@ setProjectEnv() {
 				ENV_SUFFIX="$2"
 				shift
 				;;
+			-D*)
+				__CUSTOM_ENV+=("$1")
+				;;
 			*)
 				;;
 		esac
@@ -36,7 +40,13 @@ setProjectEnv() {
 		fi
 	fi
 
+	if [ ${#__CUSTOM_ENV[@]} -gt 0 ]; then
+		echo "exporting CUSTOM_ENV"
+		CUSTOM_ENV="${__CUSTOM_ENV[@]}"
+	fi
+
 	echo "PROJECT_HOME = $PROJECT_HOME"
 	echo "PROJECT_REPOSITORY = $PROJECT_REPOSITORY"
 	echo "KETTLE_SHARED_OBJECT = $KETTLE_SHARED_OBJECT"
+	echo "CUSTOM_ENV = ${CUSTOM_ENV}"
 }
